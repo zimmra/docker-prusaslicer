@@ -32,7 +32,7 @@ RUN \
     /var/tmp/*
 
 RUN apt update && apt install -y --no-install-recommends --allow-unauthenticated \
-        lxde gtk2-engines-murrine gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme \
+        lxde gtk2-engines-murrine gosu gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme \
         freeglut3 libgtk2.0-dev libwxgtk3.0-gtk3-dev libwx-perl libxmu-dev libgl1-mesa-glx libgl1-mesa-dri  \
         xdg-utils locales locales-all pcmanfm jq curl git \
     && add-apt-repository ppa:mozillateam/ppa \
@@ -75,7 +75,9 @@ RUN chmod +x /slic3r/get_latest_prusaslicer_release.sh \
   && echo "file:///prints prints" >> /home/slic3r/.gtk-bookmarks 
 
 # Create the script and make it executable
-RUN echo -e '#!/bin/bash\nexec gosu slic3r /slic3r/slic3r-dist/prusa-slicer --datadir /configs/.config/PrusaSlicer/ "$@"' > /usr/local/bin/prusa-slicer && chmod +x /usr/local/bin/prusa-slicer
+RUN echo '#!/bin/bash' > /usr/local/bin/prusa-slicer && \
+    echo 'exec gosu slic3r /slic3r/slic3r-dist/prusa-slicer --datadir /configs/.config/PrusaSlicer/ "$@"' >> /usr/local/bin/prusa-slicer && \
+    chmod +x /usr/local/bin/prusa-slicer
 
 # add local files
 COPY /root /
