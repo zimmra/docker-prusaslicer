@@ -1,0 +1,109 @@
+---
+
+# project information
+project_name: blender
+project_url: "https://www.blender.org/"
+project_logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/blender-logo.png"
+project_blurb: "[Blender]({{ project_url }}) is a free and open-source 3D computer graphics software toolset used for creating animated films, visual effects, art, 3D printed models, motion graphics, interactive 3D applications, virtual reality, and computer games. **This image does not support GPU rendering out of the box only accelerated workspace experience**"
+project_lsio_github_repo_url: "https://github.com/linuxserver/docker-{{ project_name }}"
+project_blurb_optional_extras_enabled: false
+
+# supported architectures
+available_architectures:
+  - { arch: "{{ arch_x86_64 }}", tag: "latest"}
+  - { arch: "{{ arch_arm64 }}", tag: "arm64v8-latest"}
+
+# development version
+development_versions: false
+
+# container parameters
+common_param_env_vars_enabled: true
+param_container_name: "{{ project_name }}"
+param_usage_include_env: true
+param_env_vars:
+  - { env_var: "TZ", env_value: "Europe/London", desc: "Specify a timezone to use EG Europe/London" }
+param_usage_include_vols: true
+param_volumes:
+  - { vol_path: "/config", vol_host_path: "/path/to/config", desc: "Users home directory in the container, stores local files and settings" }
+param_usage_include_ports: true
+param_ports:
+  - { external_port: "3000", internal_port: "3000", port_desc: "Blender desktop gui" }
+  - { external_port: "3001", internal_port: "3001", port_desc: "Blender desktop gui HTTPS" }
+opt_param_usage_include_env: true
+opt_param_env_vars:
+  - { env_var: "SUBFOLDER", env_value: "/", desc: "Specify a subfolder to use with reverse proxies, IE `/subfolder/`"}
+opt_param_devices:
+  - { device_path: "/dev/dri", device_host_path: "/dev/dri", desc: "Add this for hardware acceleration (Linux hosts only)" }
+opt_security_opt_param: true
+opt_security_opt_param_vars:
+  - { run_var: "seccomp=unconfined", compose_var: "seccomp:unconfined", desc: "For Docker Engine only, this may be required depending on your Docker and storage configuration." }
+
+# application setup block
+app_setup_block_enabled: true
+app_setup_block: |
+  The application can be accessed at:
+
+  * http://yourhost:3000/
+  * https://yourhost:3001/
+  
+  ## Hardware Acceleration
+  
+  This only applies to your desktop experience, this container is capable of supporting accelerated rendering with /dev/dri mounted in, but the AMD HIP and Nvidia CUDA runtimes are massive which are not installed by default in this container.
+  
+  ### Intel/ATI/AMD
+  
+  To leverage hardware acceleration you will need to mount /dev/dri video device inside of the conainer.
+  ```
+  --device /dev/dri:/dev/dri
+  ```
+  We will automatically ensure the abc user inside of the container has the proper permissions to access this device.
+
+  ### Nvidia
+  
+  Hardware acceleration users for Nvidia will need to install the container runtime provided by Nvidia on their host, instructions can be found here:
+  https://github.com/NVIDIA/nvidia-docker
+  
+  We automatically add the necessary environment variable that will utilise all the features available on a GPU on the host. Once nvidia-docker is installed on your host you will need to re/create the docker container with the nvidia container runtime `--runtime=nvidia` and add an environment variable `-e NVIDIA_VISIBLE_DEVICES=all` (can also be set to a specific gpu's UUID, this can be discovered by running `nvidia-smi --query-gpu=gpu_name,gpu_uuid --format=csv` ). NVIDIA automatically mounts the GPU and drivers from your host into the container.
+
+  ### Arm Devices
+
+  Arm devices can run this image, but generally should not mount in /dev/dri. The OpenGL ES version is not high enough to run Blender. The program can run on these platforms though, leveraging CPU LLVMPipe rendering.
+
+  Due to lack of arm64 binaries from the upstream project, our arm64 image installs the latest version from the ubuntu repo, which is usually behind and thus the version the image is tagged with does not match the version contained.
+
+  ### Options in all KasmVNC based GUI containers
+
+  This container is based on [Docker Baseimage KasmVNC](https://github.com/linuxserver/docker-baseimage-kasmvnc) which means there are additional environment variables and run configurations to enable or disable specific functionality.
+  
+  #### Optional environment variables
+
+  | Variable | Description |
+  | :----: | --- |
+  | CUSTOM_PORT | Internal port the container listens on for http if it needs to be swapped from the default 3000. |
+  | CUSTOM_HTTPS_PORT | Internal port the container listens on for https if it needs to be swapped from the default 3001. |
+  | CUSTOM_USER | HTTP Basic auth username, abc is default. |
+  | PASSWORD | HTTP Basic auth password, abc is default. If unset there will be no auth |
+  | SUBFOLDER | Subfolder for the application if running a subfolder reverse proxy, need both slashes IE `/subfolder/` |
+  | TITLE | The page title displayed on the web browser, default "KasmVNC Client". |
+  | FM_HOME | This is the home directory (landing) for the file manager, default "/config". |
+  | START_DOCKER | If set to false a container with privilege will not automatically start the DinD Docker setup. |
+  | DRINODE | If mounting in /dev/dri for [DRI3 GPU Acceleration](https://www.kasmweb.com/kasmvnc/docs/master/gpu_acceleration.html) allows you to specify the device to use IE `/dev/dri/renderD128` |
+
+  #### Optional run configurations
+
+  | Variable | Description |
+  | :----: | --- |
+  | `--privileged` | Will start a Docker in Docker (DinD) setup inside the container to use docker in an isolated environment. For increased performance mount the Docker directory inside the container to the host IE `-v /home/user/docker-data:/var/lib/docker`. |
+  | `-v /var/run/docker.sock:/var/run/docker.sock` | Mount in the host level Docker socket to either interact with it via CLI or use Docker enabled applications. |
+  | `--device /dev/dri:/dev/dri` | Mount a GPU into the container, this can be used in conjunction with the `DRINODE` environment variable to leverage a host video card for GPU accelerated appplications. Only **Open Source** drivers are supported IE (Intel,AMDGPU,Radeon,ATI,Nouveau) |
+
+  ### Lossless mode
+
+  This container is capable of delivering a true lossless image at a high framerate to your web browser by changing the Stream Quality preset to "Lossless", more information [here](https://www.kasmweb.com/docs/latest/how_to/lossless.html#technical-background). In order to use this mode from a non localhost endpoint the HTTPS port on 3001 needs to be used. If using a reverse proxy to port 3000 specific headers will need to be set as outlined [here](https://github.com/linuxserver/docker-baseimage-kasmvnc#lossless).
+
+# changelog
+changelogs:
+  - { date: "18.03.23:", desc: "Rebase to KasmVNC base image." }
+  - { date: "13.12.22:", desc: "Rebase to Jammy, migrate to s6v3." }
+  - { date: "06.05.22:", desc: "Use the full semver version in image tags. Arm32/64 version tags are inaccurate due to installing from ubuntu repo, which is usually behind." }
+  - { date: "12.03.22:", desc: "Initial Release." }
