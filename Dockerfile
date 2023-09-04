@@ -39,31 +39,33 @@ RUN \
 RUN git clone https://www.github.com/prusa3d/PrusaSlicer && cd PrusaSlicer && git checkout version_2.6.1-rc2
 
 
-# Build dependencies
-RUN cd deps && \
-    mkdir build && \
-    cd build && \
-    cmake .. -DDEP_WX_GTK3=ON && \
-    make && \
-    cd ../..
+RUN ls -la
 
-# Create a build directory and compile PrusaSlicer 
-RUN mkdir build && \
-    cd build && \
-    cmake .. -DSLIC3R_STATIC=1 -DSLIC3R_GTK=3 -DSLIC3R_PCH=OFF -DCMAKE_PREFIX_PATH=$(pwd)/../deps/build/destdir/usr/local && \
-    make -j4
+# # Build dependencies
+# RUN cd deps && \
+#     mkdir build && \
+#     cd build && \
+#     cmake .. -DDEP_WX_GTK3=ON && \
+#     make && \
+#     cd ../..
 
-# Create a symbolic link to invoke FreeCAD with 'freecad'
-RUN ln -s src/prusa-slicer /usr/local/bin/prusa-slicer && \
-    rm -rf \
-      /tmp/* \
-      /var/lib/apt/lists/* \
-      /var/tmp/*
+# # Create a build directory and compile PrusaSlicer 
+# RUN mkdir build && \
+#     cd build && \
+#     cmake .. -DSLIC3R_STATIC=1 -DSLIC3R_GTK=3 -DSLIC3R_PCH=OFF -DCMAKE_PREFIX_PATH=$(pwd)/../deps/build/destdir/usr/local && \
+#     make -j4
 
-# add local files
-COPY /root /
+# # Create a symbolic link to invoke FreeCAD with 'freecad'
+# RUN ln -s src/prusa-slicer /usr/local/bin/prusa-slicer && \
+#     rm -rf \
+#       /tmp/* \
+#       /var/lib/apt/lists/* \
+#       /var/tmp/*
 
-# ports and volumes
-EXPOSE 3000
+# # add local files
+# COPY /root /
 
-VOLUME /config
+# # ports and volumes
+# EXPOSE 3000
+
+# VOLUME /config
