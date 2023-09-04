@@ -76,10 +76,11 @@ RUN chmod +x /slic3r/get_latest_prusaslicer_release.sh \
 
 # Create the script and make it executable
 RUN echo '#!/bin/bash' > /usr/local/bin/prusa-slicer && \
-    echo 'exec gosu slic3r /slic3r/slic3r-dist/prusa-slicer --datadir /config/.config/PrusaSlicer/ "$@"' >> /usr/local/bin/prusa-slicer && \
+    echo 'sudo -u slic3r /slic3r/slic3r-dist/prusa-slicer --datadir /config/.config/PrusaSlicer/ "$@"' >> /usr/local/bin/prusa-slicer && \
     chmod +x /usr/local/bin/prusa-slicer
 
 # add local files
+RUN if [ -f /defaults/menu.xml ]; then rm -rf /defaults/menu.xml; fi
 COPY /root /
 
 # ports and volumes
