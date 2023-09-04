@@ -76,7 +76,7 @@ RUN chmod +x /slic3r/get_latest_prusaslicer_release.sh \
 
 # Create the script and make it executable
 RUN echo '#!/bin/bash' > /usr/local/bin/prusa-slicer && \
-    echo 'exec gosu slic3r /slic3r/slic3r-dist/prusa-slicer --datadir /configs/.config/PrusaSlicer/ "$@"' >> /usr/local/bin/prusa-slicer && \
+    echo 'exec gosu slic3r /slic3r/slic3r-dist/prusa-slicer --datadir /config/.config/PrusaSlicer/ "$@"' >> /usr/local/bin/prusa-slicer && \
     chmod +x /usr/local/bin/prusa-slicer
 
 # add local files
