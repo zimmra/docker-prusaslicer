@@ -61,16 +61,15 @@ RUN chmod +x /slic3r/get_latest_prusaslicer_release.sh \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get autoclean \
   && mkdir -p /slic3r \
-  && mkdir -p /config/.config \
-  && mkdir -p /config/.config/PrusaSlicer \
+  && mkdir -p /home/kasm-user/.config/PrusaSlicer \
   && mkdir -p /prints \
-  && ln -s /config/.config/PrusaSlicer /config/PrusaSlicer \
-  && chown -R kasm-user:kasm-user /slic3r /prints /config 
+  && ln -s /home/.config/PrusaSlicer /config/PrusaSlicer \
+  && chown -R kasm-user:kasm-user /slic3r /prints /config /home/kasm-user/.config/PrusaSlicer
  
 
 # Create the script and make it executable
 RUN echo '#!/bin/bash' > /usr/local/bin/prusa-slicer && \
-    echo '/slic3r/slic3r-dist/prusa-slicer --datadir /config/.config/PrusaSlicer/ "$@"' >> /usr/local/bin/prusa-slicer && \
+    echo '/slic3r/slic3r-dist/prusa-slicer --datadir /home/kasm-user/.config/PrusaSlicer/ "$@"' >> /usr/local/bin/prusa-slicer && \
     chmod +x /usr/local/bin/prusa-slicer
 
 # add local files
