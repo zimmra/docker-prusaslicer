@@ -1,13 +1,9 @@
 # Work-In-Progress
 ## Use at Your Own Risk
 
-Can be found at https://hub.docker.com/r/pzubuntu593/docker-freecad
+Can be found at https://hub.docker.com/r/pzubuntu593/docker-prusaslicer
 
 Based off LSIO's implementation of KasmVNC w/ Blender
-
-Large image, because currently the image has FreeCAD pre-installed via compiling from source.
-
-The apt versions (default repo & PPA) were having issues for me, and they seem to no longer be maintained.
 
 .AppImage and Flatpak versions did not like running in docker
 
@@ -17,8 +13,8 @@ The apt versions (default repo & PPA) were having issues for me, and they seem t
 version: "2.1"
 services:
   freecad:
-    image: pzubuntu593/docker-freecad:latest
-    container_name: FreeCAD
+    image: pzubuntu593/docker-prusaslicer:latest
+    container_name: PrusaSlicer
     privileged: true
     security_opt:
       - seccomp:unconfined #optional
@@ -26,9 +22,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
-      - TITLE=FreeCAD
+      - TITLE=PrusaSlicer
     volumes:
-      - /dockercfg/freecad:/config
+      - /dockercfg/prusaslicer:/config
     devices:
       - /dev/dri:/dev/dri 
     ports:

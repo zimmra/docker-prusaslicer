@@ -32,9 +32,11 @@ RUN \
     /var/tmp/*
 
 RUN apt update && apt install -y --no-install-recommends --allow-unauthenticated \
-        lxde gtk2-engines-murrine gosu gnome-themes-standard gtk2-engines-pixbuf gtk2-engines-murrine arc-theme \
-        freeglut3 libgtk2.0-dev libwxgtk3.0-gtk3-dev libwx-perl libxmu-dev libgl1-mesa-glx libgl1-mesa-dri  \
-        xdg-utils locales locales-all pcmanfm jq curl git \
+        fonts-noto-core fonts-noto-hinted fonts-noto-ui-core libblosc1 \
+        libboost-chrono1.74.0 libboost-filesystem1.74.0 libboost-iostreams1.74.0 \
+        libboost-locale1.74.0 libboost-log1.74.0 libboost-regex1.74.0 \
+        libboost-thread1.74.0 libglew2.2 libilmbase25 liblog4cplus-2.0.5 libnlopt0 \
+        libnotify4 libopenvdb8.1 libtbb2 libtbbmalloc2 libwxbase3.0-0v5 libwxgtk3.0-gtk3-0v5 nautilus jq curl git \
     && add-apt-repository ppa:mozillateam/ppa \
     && apt update \
     && apt install firefox-esr -y \
@@ -43,8 +45,8 @@ RUN apt update && apt install -y --no-install-recommends --allow-unauthenticated
     && rm -rf /var/lib/apt/lists/*
 
 # Install Prusaslicer
-# Many of the commands below were derived and pulled from previous work by dmagyar on GitHub.
-# Here's their Dockerfile for reference https://github.com/dmagyar/prusaslicer-vnc-docker/blob/main/Dockerfile.amd64
+# Many of the commands below were derived and pulled from previous work by dmagyar helfrichmichael on GitHub.
+# Here's their Dockerfiles for reference https://github.com/dmagyar/prusaslicer-vnc-docker/blob/main/Dockerfile.amd64 & https://github.com/helfrichmichael/prusaslicer-novnc/blob/main/Dockerfile
 WORKDIR /slic3r
 ADD get_latest_prusaslicer_release.sh /slic3r
 
@@ -58,26 +60,15 @@ RUN chmod +x /slic3r/get_latest_prusaslicer_release.sh \
   && rm -f /slic3r/${slic3rReleaseName} \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get autoclean \
-  && groupadd slic3r \
-  && useradd -g slic3r --create-home --home-dir /home/slic3r slic3r \
   && mkdir -p /slic3r \
   && mkdir -p /config \
-  && mkdir -p /prints/ \
-  && chown -R slic3r:slic3r /slic3r/ /home/slic3r/ /prints/ /config/ \
-  && locale-gen en_US \
-  && mkdir /config/.local \
-  && mkdir -p /config/.config/ \
-  && ln -s /config/.config/ /home/slic3r/ \
-  && mkdir -p /home/slic3r/.config/ \
-  # We can now set the Download directory for Firefox and other browsers. 
-  # We can also add /prints/ to the file explorer bookmarks for easy access.
-  && echo "XDG_DOWNLOAD_DIR=\"/prints/\"" >> /home/slic3r/.config/user-dirs.dirs \
-  && echo "file:///prints prints" >> /home/slic3r/.gtk-bookmarks 
+  && mkdir -p /prints \
+  && chown -R abc:abc /slic3r /prints /config \
+  && ln -s /config/.config/PrusaSlicer /config/PrusaSlicer
 
 # Create the script and make it executable
 RUN echo '#!/bin/bash' > /usr/local/bin/prusa-slicer && \
-    echo 'sudo chown -R slic3r:slic3r /home/slic3r/ /config/ /prints/ /dev/stdout' >> /usr/local/bin/prusa-slicer && \
-    echo 'sudo -u slic3r /slic3r/slic3r-dist/prusa-slicer --datadir /config/.config/PrusaSlicer/ "$@"' >> /usr/local/bin/prusa-slicer && \
+    echo '/slic3r/slic3r-dist/prusa-slicer --datadir /config/.config/PrusaSlicer/ "$@"' >> /usr/local/bin/prusa-slicer && \
     chmod +x /usr/local/bin/prusa-slicer
 
 # add local files
