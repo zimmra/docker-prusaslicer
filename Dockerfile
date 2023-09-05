@@ -35,8 +35,8 @@ RUN apt update && apt install -y --no-install-recommends --allow-unauthenticated
         fonts-noto-core fonts-noto-hinted fonts-noto-ui-core libblosc1 \
         libboost-chrono1.74.0 libboost-filesystem1.74.0 libboost-iostreams1.74.0 \
         libboost-locale1.74.0 libboost-log1.74.0 libboost-regex1.74.0 \
-        libboost-thread1.74.0 libglew2.2 libilmbase25 liblog4cplus-2.0.5 libnlopt0 \
-        libnotify4 libopenvdb8.1 libtbb2 libtbbmalloc2 libwxbase3.0-0v5 libwxgtk3.0-gtk3-0v5 nautilus jq curl git \
+        libboost-thread1.74.0 libglew2.2 libilmbase25 liblog4cplus-2.0.5 libnlopt0 *gtk3-0v5\
+        libnotify4 libopenvdb8.1 libtbb2 libtbbmalloc2 libwxbase3.0-0v5 nautilus jq curl git \
     && add-apt-repository ppa:mozillateam/ppa \
     && apt update \
     && apt install firefox-esr -y \
@@ -61,10 +61,12 @@ RUN chmod +x /slic3r/get_latest_prusaslicer_release.sh \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get autoclean \
   && mkdir -p /slic3r \
-  && mkdir -p /config \
+  && mkdir -p /config/.config \
+  && mkdir -p /config/.config/PrusaSlicer \
   && mkdir -p /prints \
-  && chown -R abc:abc /slic3r /prints /config \
-  && ln -s /config/.config/PrusaSlicer /config/PrusaSlicer
+  && ln -s /config/.config/PrusaSlicer /config/PrusaSlicer \
+  && chown -R kasm-user:kasm-user /slic3r /prints /config 
+ 
 
 # Create the script and make it executable
 RUN echo '#!/bin/bash' > /usr/local/bin/prusa-slicer && \
