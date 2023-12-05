@@ -64,7 +64,7 @@ RUN chmod +x /slic3r/get_latest_prusaslicer_release.sh \
   && mkdir -p /home/kasm-user/.config/PrusaSlicer \
   && mkdir -p /prints \
   && ln -s /home/kasm-user/.config/PrusaSlicer /config/PrusaSlicer \
-  && chown -R kasm-user:kasm-user /slic3r /prints /config /home/kasm-user/.config/PrusaSlicer
+  && chown -R kasm-user:kasm-user /slic3r /prints /config /home/kasm-user/.config/PrusaSlicer \
   && chown -h kasm-user:kasm-user /config/PrusaSlicer
  
 
