@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openbox_menu xmlns="http://openbox.org/3.4/menu">
 <menu id="root-menu" label="MENU">
-<item label="PrusaSlicer"><action name="Execute"><command>/usr/local/bin/prusa-slicer</command></action></item>
-<item label="Files"><action name="Execute"><command>/usr/bin/nautilus</command></action></item>
+<item label="PrusaSlicer" icon="/slic3r/slic3r-dist/resources/icons/PrusaSlicer_32px.png"><action name="Execute"><command>/usr/local/bin/prusa-slicer</command></action></item>
+<item label="Chrome" icon="/opt/google/chrome/product_logo_32.xpm"><action name="Execute"><command>/usr/bin/google-chrome-stable</command></action></item>
+<item label="Files" icon="/usr/share/icons/hicolor/scalable/apps/org.gnome.Nautilus.svg"><action name="Execute"><command>/usr/bin/nautilus</command></action></item>
 <item label="Terminal" icon="/usr/share/pixmaps/xterm-color_48x48.xpm"><action name="Execute"><command>/usr/bin/xterm</command></action></item>
 <item label="Reload OB"><action name="Reconfigure"/></item>
 </menu>
