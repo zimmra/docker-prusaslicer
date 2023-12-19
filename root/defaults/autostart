@@ -1,1 +1,6 @@
-DRI_PRIME=1 prusa-slicer
+DRI_PRIME=1 prusa-slicer &
+
+# Check if SingletonLock file exists and remove it if it does
+if [ -f "/home/zimmra/.config/google-chrome/SingletonLock" ]; then
+    rm "/home/zimmra/.config/google-chrome/SingletonLock" &
+fi
