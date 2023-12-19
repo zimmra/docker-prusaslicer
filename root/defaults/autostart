@@ -4,3 +4,7 @@ DRI_PRIME=1 prusa-slicer &
 if [ -f "/home/zimmra/.config/google-chrome/SingletonLock" ]; then
     rm "/home/zimmra/.config/google-chrome/SingletonLock" &
 fi
+
+if [ -L "/home/zimmra/.config/google-chrome/SingletonLock" ]; then
+    rm "/home/zimmra/.config/google-chrome/SingletonLock" &
+fi
