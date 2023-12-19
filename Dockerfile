@@ -36,7 +36,7 @@ RUN apt update && apt install -y --no-install-recommends --allow-unauthenticated
         libboost-chrono1.74.0 libboost-filesystem1.74.0 libboost-iostreams1.74.0 \
         libboost-locale1.74.0 libboost-log1.74.0 libboost-regex1.74.0 \
         libboost-thread1.74.0 libglew2.2 libilmbase25 liblog4cplus-2.0.5 libnlopt0 *gtk3-0v5\
-        libnotify4 libopenvdb8.1 libtbb2 libtbbmalloc2 libwxbase3.0-0v5 nautilus jq curl git wget \
+        libnotify4 libopenvdb8.1 libtbb2 libtbbmalloc2 libwxbase3.0-0v5 nautilus jq curl git wget openscad \
     && add-apt-repository ppa:mozillateam/ppa \
     && apt update \
     && apt install firefox-esr -y \
